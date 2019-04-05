@@ -24,7 +24,6 @@ namespace Framework.Sampe.Console
                 var ccc = container.GetInstance<IAmbientDbContextFactory>();
                 using (var ambientContext = ccc.Create(join:true, suppress:false))
                 {
-	                var t1 = app.FirstOrDefault(x=>x.Id==5);
 	                var t2 = app.FirstOrDefault(14100013);
 	                ambientContext.Commit();
                 }

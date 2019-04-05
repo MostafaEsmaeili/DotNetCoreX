@@ -13,6 +13,10 @@ using Framework.Dapper.Repositories;
 using Framework.Dependency;
 using Framework.Entity;
 using Framework.Exceptions;
+using Framework.Logging;
+using Kendo.Mvc;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using LinqToDB;
 using LinqToDB.Data;
 using Sql = Dapper.FastCrud.Sql;
@@ -26,7 +30,7 @@ namespace Framework.Repositories
     {
 	    private readonly IAmbientDbContextLocator _ambientDbContextLocator;
         private readonly RepositoryContainer _container = RepositoryContainer.Instance;
-
+        protected CustomLogger Logger => new CustomLogger(GetType().FullName);
         protected LinqToDbRepositoryBase(IAmbientDbContextLocator ambientDbContextLocator )
         {
 	        _ambientDbContextLocator = ambientDbContextLocator;
@@ -124,7 +128,7 @@ namespace Framework.Repositories
 
         }
 
-        public virtual async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        protected virtual async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
 
 	      
@@ -167,12 +171,12 @@ namespace Framework.Repositories
 	        return  await SingleAsync(id);
         }
 
-        public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        protected virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
 	        return await SingleAsync(predicate);
         }
 
-        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+        protected virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
 	        return Single(predicate);
         }
@@ -191,14 +195,14 @@ namespace Framework.Repositories
 	        
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
+        protected IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
 	       
 		        var query = DbContext.GetTable<TEntity>().CreateQuery<TEntity>(predicate);
 		        return  query.ToList();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        protected async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
 	       
 		        var query = DbContext.GetTable<TEntity>().CreateQuery<TEntity>(predicate);
@@ -285,7 +289,7 @@ namespace Framework.Repositories
           return  DbContext.Delete(entity);
         }
 
-        public int Delete(Expression<Func<TEntity, bool>> predicate)
+        protected int Delete(Expression<Func<TEntity, bool>> predicate)
         {
            return DbContext.GetTable<TEntity>().CreateQuery<TEntity>(predicate).Delete();
         }
@@ -295,7 +299,90 @@ namespace Framework.Repositories
             return  DbContext.DeleteAsync(entity);
         }
 
-        public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public  Task<DataSourceResult> GetAllPagedAsync(DataSourceRequest request,
+            params KeyValuePair<string, string>[] replaceSortFields)
+        {
+            var newListOfSort = new List<SortDescriptor>();
+            if (request.Sorts != null)
+            {
+                newListOfSort = request.Sorts.Select(x => new SortDescriptor
+                {
+                    SortDirection = x.SortDirection,
+                    SortCompare = x.SortCompare,
+                    Member = ReplaceSortMember(x.Member.Split('.')[x.Member.Split('.').Length - 1], replaceSortFields)
+                }).ToList();
+
+            }
+            request.Sorts = newListOfSort;
+            var query =  DbContext.GetTable<TEntity>().ToDataSourceResultAsync(request);
+            return query;
+        }
+
+        /// <summary>
+        /// this method replace sort field string with replacement value
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="replaceSortFields"></param>
+        /// <returns></returns>
+        private string ReplaceSortMember(string member, KeyValuePair<string, string>[] replaceSortFields)
+        {
+            var list = replaceSortFields.ToList();
+            return list.Any(x => x.Key == member) ? list.FirstOrDefault(x => x.Key == member).Value : member;
+        }
+        public DataSourceResult GetAllPaged(DataSourceRequest request, params KeyValuePair<string, string>[] replaceSortFields)
+        {
+            var newListOfSort = new List<SortDescriptor>();
+            if (request.Sorts != null)
+            {
+                newListOfSort = request.Sorts.Select(x => new SortDescriptor
+                {
+                    SortDirection = x.SortDirection,
+                    SortCompare = x.SortCompare,
+                    Member = ReplaceSortMember(x.Member.Split('.')[x.Member.Split('.').Length - 1], replaceSortFields)
+                }).ToList();
+            }
+            request.Sorts = newListOfSort;
+            var query =  DbContext.GetTable<TEntity>().ToDataSourceResult(request);
+            return query;
+        }
+
+        public Task<DataSourceResult> GetAllPagedAsync<TAny>(DataSourceRequest request,IQueryable<TAny> queryable, params KeyValuePair<string, string>[] replaceSortFields) where TAny : class, new()
+        {
+            var newListOfSort = new List<SortDescriptor>();
+            if (request.Sorts != null)
+            {
+                newListOfSort = request.Sorts.Select(x => new SortDescriptor
+                {
+                    SortDirection = x.SortDirection,
+                    SortCompare = x.SortCompare,
+                    Member = ReplaceSortMember(x.Member.Split('.')[x.Member.Split('.').Length - 1], replaceSortFields)
+                }).ToList();
+
+            }
+            request.Sorts = newListOfSort;
+            var query =  queryable.ToDataSourceResultAsync(request);
+            return query;
+        }
+
+        public DataSourceResult GetAllPaged<TAny>(DataSourceRequest request, IQueryable<TAny> queryable,params KeyValuePair<string, string>[] replaceSortFields) where TAny : class, new()
+        {
+            var newListOfSort = new List<SortDescriptor>();
+            if (request.Sorts != null)
+            {
+                newListOfSort = request.Sorts.Select(x => new SortDescriptor
+                {
+                    SortDirection = x.SortDirection,
+                    SortCompare = x.SortCompare,
+                    Member = ReplaceSortMember(x.Member.Split('.')[x.Member.Split('.').Length - 1], replaceSortFields)
+                }).ToList();
+            }
+            request.Sorts = newListOfSort;
+            var query =  queryable.ToDataSourceResult(request);
+            return query;
+        }
+
+
+        protected Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return DbContext.GetTable<TEntity>().CreateQuery<TEntity>(predicate).DeleteAsync();
         }

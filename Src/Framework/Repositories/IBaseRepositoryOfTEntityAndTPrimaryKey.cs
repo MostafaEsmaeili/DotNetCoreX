@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Framework.Entity;
 using JetBrains.Annotations;
+using Kendo.Mvc.UI;
 
 namespace Framework.Dapper.Repositories
 {
@@ -16,7 +18,7 @@ namespace Framework.Dapper.Repositories
     /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
     /// <seealso cref="T:Framework.Repositories.IBaseRepository" />
     public interface IBaseRepository<TEntity, TPrimaryKey> : IRepository where TEntity : class, IEntity<TPrimaryKey>
-                                                                             where TPrimaryKey : IComparable
+        where TPrimaryKey : IComparable
     {
         /// <summary>
         ///     Gets the specified identifier.
@@ -34,21 +36,9 @@ namespace Framework.Dapper.Repositories
         [CanBeNull]
         Task<TEntity> FirstOrDefaultAsync([NotNull] TPrimaryKey id);
 
-        /// <summary>
-        ///     Gets the Entity with specified predicate
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        [CanBeNull]
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
-        /// <summary>
-        ///     Gets the Entity with specified predicate
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        [CanBeNull]
-        TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+
 
         /// <summary>
         ///     Gets the list.
@@ -64,21 +54,8 @@ namespace Framework.Dapper.Repositories
         [NotNull]
         Task<IEnumerable<TEntity>> GetAllAsync();
 
-        /// <summary>
-        ///     Gets the list.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        [NotNull]
-        IEnumerable<TEntity> GetAll([NotNull] Expression<Func<TEntity, bool>> predicate);
 
-        /// <summary>
-        ///     Gets the list asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        [NotNull]
-        Task<IEnumerable<TEntity>> GetAllAsync([NotNull] Expression<Func<TEntity, bool>> predicate);
+
 
         /// <summary>
         ///     Gets the list paged asynchronous.
@@ -89,7 +66,8 @@ namespace Framework.Dapper.Repositories
         /// <param name="pageRequests">Sort direction items</param>
         /// <returns></returns>
         [NotNull]
-        Task<IPagedResult<TEntity>> GetAllPagedAsync([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, [NotNull] IEnumerable<PageSortRequest> pageRequests);
+        Task<IPagedResult<TEntity>> GetAllPagedAsync([NotNull] Expression<Func<TEntity, bool>> predicate,
+            int pageNumber, int itemsPerPage, [NotNull] IEnumerable<PageSortRequest> pageRequests);
 
         /// <summary>
         ///     Gets the list paged asynchronous.
@@ -100,7 +78,8 @@ namespace Framework.Dapper.Repositories
         /// <param name="pageRequests">Sort direction items</param>
         /// <returns></returns>
         [NotNull]
-        IPagedResult<TEntity> GetAllPaged([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, [NotNull] IEnumerable<PageSortRequest> pageRequests);
+        IPagedResult<TEntity> GetAllPaged([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber,
+            int itemsPerPage, [NotNull] IEnumerable<PageSortRequest> pageRequests);
 
 
         /// <summary>
@@ -167,11 +146,6 @@ namespace Framework.Dapper.Repositories
         /// <param name="entity">The entity.</param>
         int Delete([NotNull] TEntity entity);
 
-        /// <summary>
-        ///     Deletes the specified entity.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        int Delete([NotNull] Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         ///     Deletes the specified entity.
@@ -181,12 +155,53 @@ namespace Framework.Dapper.Repositories
         [NotNull]
         Task<int> DeleteAsync([NotNull] TEntity entity);
 
+
         /// <summary>
-        ///     Deletes the asynchronous.
+        ///     Gets the list paged asynchronous.
         /// </summary>
-        /// <param name="predicate">The predicate.</param>
+        /// <param name="request">Kendo DataSource Request.</param>
+        /// <param name="replaceSortFields">Some time it needed to replace some sort criteria by another, for example client sent GenderTitle and it should Replace with Gender.
+        /// </param>
         /// <returns></returns>
         [NotNull]
-        Task<int> DeleteAsync([NotNull] Expression<Func<TEntity, bool>> predicate);
+        Task<DataSourceResult> GetAllPagedAsync([NotNull] DataSourceRequest request,
+            params KeyValuePair<string, string>[] replaceSortFields);
+
+        /// <summary>
+        ///     Gets the list paged asynchronous.
+        /// </summary>
+        /// <param name="request">Kendo DataSource Request.</param>
+        /// <param name="replaceSortFields">Some time it needed to replace some sort criteria by another, for example client sent GenderTitle and it should Replace with Gender.
+        /// </param>
+        /// <returns></returns>
+        [NotNull]
+        DataSourceResult GetAllPaged([NotNull] DataSourceRequest request,
+            params KeyValuePair<string, string>[] replaceSortFields);
+
+
+        /// <summary>
+        ///     Gets the list paged asynchronous.
+        /// </summary>
+        /// <param name="request">Kendo DataSource Request.</param>
+        /// <param name="queryable"></param>
+        /// <param name="replaceSortFields">Some time it needed to replace some sort criteria by another, for example client sent GenderTitle and it should Replace with Gender.
+        /// </param>
+        /// <returns></returns>
+        [NotNull]
+        Task<DataSourceResult> GetAllPagedAsync<TAny>([NotNull] DataSourceRequest request, IQueryable<TAny> queryable,
+            params KeyValuePair<string, string>[] replaceSortFields) where TAny : class, new ();
+
+        /// <summary>
+        ///     Gets the list paged asynchronous.
+        /// </summary>
+        /// <param name="request">Kendo DataSource Request.</param>
+        /// <param name="queryable"></param>
+        /// <param name="replaceSortFields">Some time it needed to replace some sort criteria by another, for example client sent GenderTitle and it should Replace with Gender.
+        /// </param>
+        /// <returns></returns>
+        [NotNull]
+        DataSourceResult GetAllPaged<TAny>([NotNull] DataSourceRequest request,IQueryable<TAny> queryable,
+            params KeyValuePair<string, string>[] replaceSortFields) where TAny : class, new ();
     }
+    
 }

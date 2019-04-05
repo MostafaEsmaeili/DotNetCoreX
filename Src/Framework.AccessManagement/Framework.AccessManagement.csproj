@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AccessControl\**" />
+    <Compile Remove="ApiResources\**" />
+    <Compile Remove="AspNetIdentity\**" />
+    <Compile Remove="AspNetUser\**" />
+    <Compile Remove="Attrebutes\**" />
+    <Compile Remove="ButtonResources\**" />
+    <Compile Remove="Dto\**" />
+    <Compile Remove="Entity\**" />
+    <Compile Remove="GridResource\**" />
+    <Compile Remove="MenuResources\**" />
+    <Compile Remove="PageResource\**" />
+    <Compile Remove="Provider\**" />
+    <EmbeddedResource Remove="AccessControl\**" />
+    <EmbeddedResource Remove="ApiResources\**" />
+    <EmbeddedResource Remove="AspNetIdentity\**" />
+    <EmbeddedResource Remove="AspNetUser\**" />
+    <EmbeddedResource Remove="Attrebutes\**" />
+    <EmbeddedResource Remove="ButtonResources\**" />
+    <EmbeddedResource Remove="Dto\**" />
+    <EmbeddedResource Remove="Entity\**" />
+    <EmbeddedResource Remove="GridResource\**" />
+    <EmbeddedResource Remove="MenuResources\**" />
+    <EmbeddedResource Remove="PageResource\**" />
+    <EmbeddedResource Remove="Provider\**" />
+    <None Remove="AccessControl\**" />
+    <None Remove="ApiResources\**" />
+    <None Remove="AspNetIdentity\**" />
+    <None Remove="AspNetUser\**" />
+    <None Remove="Attrebutes\**" />
+    <None Remove="ButtonResources\**" />
+    <None Remove="Dto\**" />
+    <None Remove="Entity\**" />
+    <None Remove="GridResource\**" />
+    <None Remove="MenuResources\**" />
+    <None Remove="PageResource\**" />
+    <None Remove="Provider\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="AuthorizationProvider.cs" />
+    <Compile Remove="IocExtentions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Entity\AccessControl.cs" />
+    <Compile Include="Entity\AccessManagementContext.cs" />
+    <Compile Include="Entity\ApiResource.cs" />
+    <Compile Include="Entity\BaseResource.cs" />
+    <Compile Include="Entity\ElementResource.cs" />
+    <Compile Include="Entity\MenuResource.cs" />
+    <Compile Include="Entity\PageResource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="linq2db.t4models" Version="2.6.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Kendo.DynamicLinq">
+      <HintPath>..\..\Lib\Kendo\Kendo.DynamicLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\..\Lib\Kendo\Kendo.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

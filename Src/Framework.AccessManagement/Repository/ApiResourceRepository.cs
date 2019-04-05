@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Dapper.AmbientContext;
 using Framework.AccessManagement.Entity;
-using Framework.Dapper.Repositories;
 using Framework.Enum;
 using Framework.Repositories;
 
-namespace Pishkhan.UserManagement.ApiResources
+namespace Framework.AccessManagement.Repository
 {
     public class ApiResourceRepository : LinqToDbRepositoryBase<ApiResource,int> , IApiResourceRepository
     {

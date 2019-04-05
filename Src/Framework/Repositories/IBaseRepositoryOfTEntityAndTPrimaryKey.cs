@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Framework.Entity;
 using JetBrains.Annotations;
 using Kendo.Mvc.UI;
 
-namespace Framework.Dapper.Repositories
+namespace Framework.Repositories
 {
     /// <inheritdoc />
     /// <summary>

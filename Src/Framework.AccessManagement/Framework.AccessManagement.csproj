@@ -16,7 +16,6 @@
     <Compile Remove="GridResource\**" />
     <Compile Remove="MenuResources\**" />
     <Compile Remove="PageResource\**" />
-    <Compile Remove="Provider\**" />
     <EmbeddedResource Remove="AccessControl\**" />
     <EmbeddedResource Remove="ApiResources\**" />
     <EmbeddedResource Remove="AspNetIdentity\**" />
@@ -28,7 +27,6 @@
     <EmbeddedResource Remove="GridResource\**" />
     <EmbeddedResource Remove="MenuResources\**" />
     <EmbeddedResource Remove="PageResource\**" />
-    <EmbeddedResource Remove="Provider\**" />
     <None Remove="AccessControl\**" />
     <None Remove="ApiResources\**" />
     <None Remove="AspNetIdentity\**" />
@@ -40,7 +38,6 @@
     <None Remove="GridResource\**" />
     <None Remove="MenuResources\**" />
     <None Remove="PageResource\**" />
-    <None Remove="Provider\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,6 +77,10 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Provider\" />
   </ItemGroup>
 
 </Project>

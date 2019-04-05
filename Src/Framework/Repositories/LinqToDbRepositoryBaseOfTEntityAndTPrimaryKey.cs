@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Dapper;
 using Dapper.AmbientContext;
 using Dapper.FastCrud;
-using Framework.Dapper.Repositories;
 using Framework.Dependency;
 using Framework.Entity;
 using Framework.Exceptions;

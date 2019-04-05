@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
 using Dapper.AmbientContext;
-using Framework.Dapper.Repositories;
 using Framework.Repositories;
 
 namespace Framework.Sampe.Console

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Framework.Dapper.Repositories;
 using Framework.Entity;
+using Framework.Repositories;
 using LinqToDB.Mapping;
 
 namespace Framework.Sampe.Console

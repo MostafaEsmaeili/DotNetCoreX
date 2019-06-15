@@ -19,10 +19,7 @@ namespace Framework.Entity
         string  ModifiedBy { get; set; }
         [Column,NotNull]
         DateTime  ModifiedAt { get; set; }
-        [Column,Nullable]
-        [MaxLength(64)]
-        [StringLength(64)]
-        string Ip { get; set; }
+
 
 
     }

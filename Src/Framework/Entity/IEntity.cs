@@ -18,4 +18,7 @@ namespace Framework.Entity
 		/// <summary>Unique identifier for this entity.</summary>
 		TPrimaryKey Id { get; set; }
 	}
+	public interface IEntity
+	{
+	}
 }

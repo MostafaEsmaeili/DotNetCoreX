@@ -9,6 +9,8 @@ namespace Framework
 {
     public static class CommonExtensions
     {
+		public static DateTime MinDate => new DateTime(1907,1,1);
+		public static DateTime MaxDate => new DateTime(2060, 1, 1);
          public static DateTime ConvertJalaliToMiladi(this string persianDate)
          {
              var timeSpan = new TimeSpan(0, 0, 0, 0);
@@ -59,6 +61,13 @@ namespace Framework
             {
                 throw new Exception("InvalidPersianDate");
             }
+         }
+
+         public static bool IsValidDate(this DateTime date)
+         {
+	         if (date < MinDate || date > MaxDate)
+		         return false;
+	         return true;
          }
 
         public static DateTime ConvertJalaliToMiladi(this string persianDate, string time)

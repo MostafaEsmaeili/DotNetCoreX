@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Kendo\" />
     <Folder Include="TagHelper\" />
   </ItemGroup>
 

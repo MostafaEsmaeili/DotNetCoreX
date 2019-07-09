@@ -1,35 +1,46 @@
-﻿//namespace Framework.TagHelper
-//{
-//    using Microsoft.AspNetCore.Razor.TagHelpers;
-//    using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
-//    public class PersianDateTagHelper : TagHelper
-//    {
-//        private const string EmailDomain = "contoso.com";
+namespace Framework.TagHelper
+{
+    public class PersianDateTagHelper : InputTagHelper
+    {
+        public PersianDateTagHelper(IHtmlGenerator generator) : base(generator)
+        {
+            InputTypeName = "text";
+        }
 
-//         Can be passed via <email mail-to="..." />. 
-//         PascalCase gets translated into kebab-case.
-//        public string DateFormat { get; set; } = "yyyy-MM-dd";
-//        public string Value { get; set; }
-//        public bool DisableBeforeToday { get; set; } = false;
-//        public string @Class { get; set; }
-//        public string Placeholder { get; set; }
+        //   Can be passed via<email mail-to= "..." />.
 
-//        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-//        {
-//            output.TagName = "input"; // Replaces <email> with <a> tag
-//            var content = await output.GetChildContentAsync();
+        //  PascalCase gets translated into kebab-case.
+        public string DateFormat { get; set; } = "yyyy-MM-dd";
+        public bool? IsGregorian { get; set; } = null;
+        public bool DisableBeforeToday { get; set; } = false;
+        public bool EnableTimePicker { get; set; } = false;
 
-//            output.Attributes.SetAttribute("class", Class);
-//            output.Attributes.SetAttribute("placeholder", Placeholder);
-//            output.PostContent.con
 
-//            output.Content.SetHtmlContent(
-//                $@"<ul><li><strong>Version:</strong> {Info.Version}</li>
-//<li><strong>Copyright Year:</strong> {Info.CopyrightYear}</li>
-//<li><strong>Approved:</strong> {Info.Approved}</li>
-//<li><strong>Number of tags to show:</strong> {Info.TagsToShow}</li></ul>");
-//        }
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            IsGregorian = IsGregorian ?? (Thread.CurrentThread.CurrentCulture.Name.Contains("en"));
 
-//    }
-//}
+
+            output.TagName = "input";
+            await base.ProcessAsync(context, output);
+            output.PostElement.SetHtmlContent($@"
+
+<script>
+$('#{For.Name}').MdPersianDateTimePicker({{
+    targetTextSelector: '#{For.Name}',
+    dateFormat: '{DateFormat}',
+    isGregorian: {IsGregorian.ToString().ToLower()},
+    enableTimePicker: {EnableTimePicker.ToString().ToLower()},
+    disableBeforeToday: {DisableBeforeToday.ToString().ToLower()},
+  }});
+
+</script>");
+        }
+    }
+}
